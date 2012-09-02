@@ -1,0 +1,16 @@
+@sprite .boundaryPanel {
+	gwt-image:"lightbackground";
+	
+	box-shadow: inset 1px 1px 4px rgba(100,100,100,0.5);
+	border: none;
+	border-radius: 4px;
+}
+
+@sprite .createCanvasPanel {
+	gwt-image:"tourCreateCanvas";
+	
+	position: absolute;
+	top: 20px;
+	left: 240px;
+}
+

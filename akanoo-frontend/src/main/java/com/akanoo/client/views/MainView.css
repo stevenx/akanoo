@@ -1,0 +1,8 @@
+@def topPanelHeight 44;
+@def contentPanelTop 44;
+@def contentPanelBottom 0;
+@def mainPadding 0;
+
+@sprite .mainPanel {
+	gwt-image: "background";
+}

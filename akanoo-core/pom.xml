@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>akanoo-parent</artifactId>
+		<groupId>com.akanoo</groupId>
+		<version>0.1-SNAPSHOT</version>
+		<relativePath>..</relativePath>
+	</parent>
+	<artifactId>akanoo-core</artifactId>
+	<packaging>grails-plugin</packaging>
+	<name>akanoo-core</name>
+	<description>Akanoo Note Taking Core</description>
+
+	<properties>
+		<grails.version>2.1.0</grails.version>
+		<gwt.version>2.4.0</gwt.version>
+		<atmosphere.version>1.0.0.RC1</atmosphere.version>
+	</properties>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>org.grails</groupId>
+			<artifactId>grails-dependencies</artifactId>
+			<version>${grails.version}</version>
+			<type>pom</type>
+		</dependency>
+
+		<dependency>
+			<groupId>org.grails</groupId>
+			<artifactId>grails-plugin-testing</artifactId>
+			<version>${grails.version}</version>
+			<scope>test</scope>
+		</dependency>
+
+
+		<dependency>
+			<groupId>com.akanoo</groupId>
+			<artifactId>akanoo-frontend</artifactId>
+			<version>0.1-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.atmosphere</groupId>
+			<artifactId>atmosphere-gwt-server</artifactId>
+			<version>${atmosphere.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>atmosphere-ping</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>gwt-servlet</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>org.atmosphere</groupId>
+			<artifactId>atmosphere-runtime</artifactId>
+			<version>${atmosphere.version}</version>
+			<exclusions>
+				<exclusion>
+					<artifactId>slf4j-api</artifactId>
+				</exclusion>
+				<exclusion>
+					<artifactId>atmosphere-ping</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.gwt</groupId>
+			<artifactId>gwt-servlet</artifactId>
+			<version>${gwt.version}</version>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<pluginManagement />
+
+		<plugins>
+			<!-- Disables the Maven surefire plugin for Grails applications, as we have our own test runner -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.12</version>
+				<configuration>
+					<skip>true</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>surefire-it</id>
+						<phase>integration-test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+						<configuration>
+							<skip>false</skip>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-clean-plugin</artifactId>
+				<version>2.4.1</version>
+				<executions>
+					<execution>
+						<id>clean-plugins</id>
+						<configuration>
+							<filesets>
+								<fileset>
+									<directory>plugins</directory>
+									<includes>
+										<include>**/*</include>
+									</includes>
+									<followSymlinks>false</followSymlinks>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+					<execution>
+						<id>clean-gwt-output-from-src</id>
+						<!-- here the phase you need -->
+						<phase>clean</phase>
+						<goals>
+							<goal>clean</goal>
+						</goals>
+						<configuration>
+							<verbose>true</verbose>
+							<filesets>
+								<fileset>
+									<directory>web-app/gwt/akanoo</directory>
+									<followSymlinks>false</followSymlinks>
+									<includes>
+										<include>**/*</include>
+									</includes>
+									<excludes>
+										<exclude>.gitignore</exclude>
+									</excludes>
+								</fileset>
+							</filesets>
+						</configuration>
+					</execution>
+				</executions> 
+			</plugin>
+			<!-- copy all sources into target/source folder -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-gwt-output-to-resources</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>web-app/gwt/akanoo</outputDirectory>
+							<resources>
+								<resource>
+									<!-- TODO this should be generated and not hard-coded! -->
+									<directory>${project.parent.basedir}/akanoo-frontend/target/akanoo-frontend-${project.version}/akanoo</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			
+
+			<plugin>
+				<groupId>org.grails</groupId>
+				<artifactId>grails-maven-plugin</artifactId>
+				<version>${grails.version}</version>
+				<configuration>
+					<!-- Whether for Fork a JVM to run Grails commands -->
+					<fork>true</fork>
+				</configuration>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>grails</id>
+			<name>grails</name>
+			<url>http://repo.grails.org/grails/core</url>
+		</repository>
+		<repository>
+			<id>grails-plugins</id>
+			<name>grails-plugins</name>
+			<url>http://repo.grails.org/grails/plugins</url>
+		</repository>
+	</repositories>
+
+	<profiles>
+		<profile>
+			<id>tools</id>
+			<activation>
+				<property>
+					<name>java.vendor</name>
+					<value>Sun Microsystems Inc.</value>
+				</property>
+			</activation>
+			<dependencies>
+				<dependency>
+					<groupId>com.sun</groupId>
+					<artifactId>tools</artifactId>
+					<version>${java.version}</version>
+					<scope>system</scope>
+					<systemPath>${java.home}/../lib/tools.jar</systemPath>
+				</dependency>
+			</dependencies>
+		</profile>
+	</profiles>
+</project>

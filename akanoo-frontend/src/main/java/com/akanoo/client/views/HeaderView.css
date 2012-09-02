@@ -1,0 +1,58 @@
+@sprite .logo {
+	gwt-image: "logoSmall";
+	margin-left: 20px;
+	background-position: center center;
+	padding: 6px;
+	display: block;
+}
+
+.header {
+	position: relative;
+	background: #fdffdc;
+}
+
+.indicator {
+	border-radius: 5px;
+	position: absolute;
+	margin: 0;
+	bottom: 18px;
+	right: 0;
+	width: 10px;
+	height: 10px;
+	box-shadow: inset 1px 1px 4px rgba(100, 100, 100, 0.5);
+	background: #FF1D00;
+	border: none;
+	margin-right: 10px;
+}
+
+.indicator.indicatorOnline {
+	background: #56D71A;
+}
+
+.createCanvasLink {
+	border-radius: 8px 8px 0 0;
+	padding: 8px 16px;
+	height: 20px;
+	margin: 8px 8px 0 0;
+	display: block;
+	outline: none;
+	border: none;	
+}
+
+.canvasLinkPanel {
+	position: absolute;
+	bottom: 0;
+	left: 230px;
+	right: 20px;
+	height: 32px;
+	overflow: hidden;
+}
+
+.headerShareButton{
+	position: absolute;
+	margin: 0;
+	bottom: 7px;
+	right: 28px;
+	outline: none;
+	border: none;	
+}

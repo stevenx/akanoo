@@ -1,0 +1,26 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+	<ui:with type="com.akanoo.client.views.HeaderView.Resources"
+		field="resources"></ui:with>
+	<ui:with type="com.akanoo.client.messages.Languages" field="messages"></ui:with>
+
+	<g:FlowPanel addStyleNames="{resources.headerStyle.header}">
+		<g:Anchor ui:field="logoAnchor" addStyleNames="{resources.headerStyle.logo}"
+			href="/" />
+		<g:HorizontalPanel ui:field="canvasLinkPanel"
+			addStyleNames="{resources.headerStyle.canvasLinkPanel}">
+			<g:PushButton ui:field="createCanvasLink"
+				addStyleNames="{resources.headerStyle.button} {resources.headerStyle.active} {resources.headerStyle.createCanvasLink}">
+				<g:upFace image="{resources.addIcon}" />
+			</g:PushButton>
+		</g:HorizontalPanel>
+		<g:PushButton ui:field="shareButton" text="{messages.shareCanvasVerb}"
+			addStyleNames="{resources.headerStyle.button} {resources.headerStyle.active} {resources.headerStyle.headerShareButton}" />
+		<g:SimplePanel ui:field="onlineIndicator"
+			addStyleNames="{resources.headerStyle.indicator}" />
+	</g:FlowPanel>
+</ui:UiBinder>

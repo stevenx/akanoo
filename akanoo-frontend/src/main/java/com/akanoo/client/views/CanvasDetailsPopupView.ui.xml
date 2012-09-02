@@ -1,0 +1,25 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<ui:with type="com.akanoo.client.messages.Languages" field="messages"></ui:with>
+	<ui:with type="com.akanoo.client.views.CanvasDetailsPopupView.Resources"
+		field="resources"></ui:with>
+
+	<g:PopupPanel ui:field="popupPanel">
+		<g:VerticalPanel>
+			<g:Label ui:field="titleLabel" addStyleNames="{resources.canvasDetailsPopupStyle.titleLabel}"></g:Label>
+			<g:PushButton ui:field="shareButton" text="{messages.shareCanvasVerb}"
+				addStyleNames="{resources.canvasDetailsPopupStyle.button} {resources.canvasDetailsPopupStyle.active}" />
+			<g:PushButton ui:field="renameButton" text="{messages.renameCanvasVerb}"
+				addStyleNames="{resources.canvasDetailsPopupStyle.button}" />	
+			<g:PushButton ui:field="deleteButton" text="{messages.deleteCanvasVerb}"
+				addStyleNames="{resources.canvasDetailsPopupStyle.button}" />
+			<g:PushButton ui:field="closeButton" text="{messages.closeVerb}"
+				addStyleNames="{resources.canvasDetailsPopupStyle.button}" />
+		</g:VerticalPanel>
+	</g:PopupPanel>
+</ui:UiBinder>

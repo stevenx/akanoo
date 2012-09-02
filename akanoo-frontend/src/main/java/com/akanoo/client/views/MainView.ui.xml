@@ -1,0 +1,21 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<ui:with type="com.akanoo.client.views.MainView.Resources"
+		field="resources" />
+	<g:LayoutPanel addStyleNames="{resources.mainStyle.mainPanel}">
+		<g:layer top="{resources.mainStyle.mainPadding}px" left="{resources.mainStyle.mainPadding}px" right="{resources.mainStyle.mainPadding}px"
+			height="{resources.mainStyle.topPanelHeight}px">
+			<g:ResizeLayoutPanel ui:field="headerPanel" />
+		</g:layer>
+
+		<g:layer top="{resources.mainStyle.contentPanelTop}px" left="{resources.mainStyle.mainPadding}px"
+			right="{resources.mainStyle.mainPadding}px" bottom="{resources.mainStyle.contentPanelBottom}px">
+			<g:ResizeLayoutPanel ui:field="contentPanel" />
+		</g:layer>
+	</g:LayoutPanel>
+</ui:UiBinder>

@@ -1,0 +1,14 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<ui:with type="com.akanoo.client.views.DummyBackgroundView.Resources"
+		field="resources" />
+	<g:AbsolutePanel ui:field="boundaryPanel"
+		addStyleNames="{resources.canvasStyle.boundaryPanel}">
+		<g:SimplePanel addStyleNames="{resources.canvasStyle.createCanvasPanel}" />
+	</g:AbsolutePanel>
+</ui:UiBinder>

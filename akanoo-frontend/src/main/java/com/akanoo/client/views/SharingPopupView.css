@@ -1,0 +1,23 @@
+.titleLabel {
+	font-size: 140%;
+	color: #888;
+	margin-bottom: 16px;
+}
+
+.shareLabel {
+	font-size: 120%;
+	color: #888;
+	margin: 16px 0;
+}
+
+@sprite .sharesList {
+	gwt-image: "lightbackground";
+	height: 220px;
+	width: 260px;
+	
+	box-shadow: inset 1px 1px 4px rgba(100,100,100,0.5);
+	border: none;
+	border-radius: 4px;
+	
+	padding: 8px;
+}

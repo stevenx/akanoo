@@ -1,0 +1,24 @@
+<!DOCTYPE ui:UiBinder SYSTEM "http://dl.google.com/gwt/DTD/xhtml.ent">
+
+<ui:UiBinder xmlns:ui='urn:ui:com.google.gwt.uibinder'
+	xmlns:g='urn:import:com.google.gwt.user.client.ui' ui:generateFormat='com.google.gwt.i18n.rebind.format.PropertiesFormat'
+	ui:generateKeys='com.google.gwt.i18n.rebind.keygen.MD5KeyGenerator'
+	ui:generateLocales='default'>
+
+	<ui:with type="com.akanoo.client.views.SharingPopupView.Resources"
+		field="resources" />
+	<ui:with type="com.akanoo.client.messages.Languages" field="messages"></ui:with>
+
+	<g:PopupPanel ui:field="popupPanel">
+		<g:VerticalPanel>
+			<g:Label text="{messages.specifyCanvasTitle}" addStyleNames="{resources.sharingPopupStyle.titleLabel}" />
+			<g:TextBox ui:field="titleField" text="{messages.defaultCanvasTitle}" />
+			<g:HorizontalPanel>
+				<g:PushButton ui:field="createButton" text="{messages.createVerb}"
+					addStyleNames="{resources.sharingPopupStyle.button} {resources.sharingPopupStyle.active}" />
+				<g:PushButton ui:field="closeButton" text="{messages.closeVerb}"
+					addStyleNames="{resources.sharingPopupStyle.button}" />
+			</g:HorizontalPanel>
+		</g:VerticalPanel>
+	</g:PopupPanel>
+</ui:UiBinder>

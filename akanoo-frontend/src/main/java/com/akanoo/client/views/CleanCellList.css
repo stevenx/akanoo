@@ -1,0 +1,21 @@
+.cellListWidget {
+  
+}
+
+.cellListEvenItem, .cellListOddItem {
+  zoom: 1;
+  border: 1px solid transparent;
+  border-radius: 4px;
+}
+
+.cellListKeyboardSelectedItem {
+	
+}
+
+.cellListSelectedItem {
+  border-style: dashed;
+  border-color: #00a;
+  
+  height: auto;
+  overflow: visible;
+}

@@ -1,0 +1,137 @@
+@def pixelSensitivity 10;
+@def sizePadding 200;
+
+@sprite .boundaryPanel {
+	gwt-image: "lightbackground";
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+@sprite .createNotePanel {
+	gwt-image: "tourCreateNote";
+	position: absolute;
+	top: 50px;
+	left: 350px;
+}
+
+.canvas {
+	box-shadow: inset 0 1px 4px rgba(100, 100, 100, 0.5);
+	border: none;
+	border-radius: 4px;
+	position: absolute !important;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	left: 0;
+}
+
+.note {
+	width: 260px;
+	height: 180px;
+	box-shadow: 0 4px 4px rgba(0, 0, 0, 0.3);
+	border: 1px solid #FFE67F;
+	background: #fff4c8; /* Old browsers */
+	background: literal("-moz-linear-gradient(top,  #fff4c8 0%, #ffe67f 100%)"); /* FF3.6+ */
+	background: literal("-webkit-linear-gradient(top,  #fff4c8 0%,#ffe67f 100%)"); /* Chrome10+,Safari5.1+ */
+	background: literal("linear-gradient(to bottom,  #fff4c8 0%,#ffe67f 100%)"); /* W3C */
+	filter: literal("progid:DXImageTransform.Microsoft.gradient( startColorstr='#fff4c8', endColorstr='#ffe67f',GradientType=0 )"); /* IE6-8 */
+}
+
+.noteFocusPanel {
+	outline: none;
+	height: 100%;
+	width: 100%;
+}
+
+.deleteNoteButton {
+	cursor: pointer;
+	position: absolute;
+	right: 8px;
+	top: -17px;
+	outline: none;
+	
+	display: none;
+}
+
+.note:hover .deleteNoteButton {
+	display: block !important;
+}
+
+.resizeNoteButton {
+	right: 8px;
+	bottom: 8px;
+	cursor: se-resize;
+}
+
+.bodyLabel {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	padding: 4px;
+	white-space: pre-wrap;
+	cursor: text;
+	
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+.bodyLabel:hover {
+	outline: 1px solid #65D6EA;
+}
+
+.bodyLabelPosition {
+	position: absolute;
+	top: 8px;
+	left: 8px;
+	width: 236px;
+	height: 156px;
+}
+
+.bodyBox {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	border: none;
+	outline: 1px solid #65d6ea;
+	padding: 4px;
+	margin: 0;
+	background-color: #FFFFE0;
+	resize:none;
+}
+
+.focusPanel, .focusPanel:active {
+	outline: none;
+}
+
+@external .dragdrop-positioner;
+@external .dragdrop-selected;
+@external .dragdrop-dragging;
+@external .dragdrop-proxy;
+
+.boundaryPanel .dragdrop-positioner {
+	-webkit-transform: rotate(-1deg);
+	-moz-transform: rotate(-1deg);
+	-ms-transform: rotate(-1deg);
+	transform: rotate(-1deg);
+	border: 1px solid rgb(0,0,200);
+	border: 1px solid rgba(0,0,200,.3);
+}
+
+.boundaryPanel .dragdrop-selected,.boundaryPanel .dragdrop-dragging,.boundaryPanel .dragdrop-proxy {
+	-webkit-transform: rotate(-1.5deg);
+	-moz-transform: rotate(-1.5deg);
+	-ms-transform: rotate(-1.5deg);
+	transform: rotate(-1.5deg);
+	filter: alpha(opacity \= 70);
+	opacity: 0.7;	
+}
+
+.boundaryPanel .dragdrop-dragging .note {
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);	
+}
+
+.boundaryPanel .dragdrop-dragging .bodyLabel {
+	outline: none !important;
+	cursor: move;
+}

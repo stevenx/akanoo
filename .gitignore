@@ -1,0 +1,11 @@
+.idea
+.project
+target-eclipse
+target
+.settings
+.classpath
+*.iml
+*.zip
+akanoo-core/web-app/gwt/akanoo/*
+akanoo-backend
+gwt-unitCache
