@@ -13,7 +13,7 @@
 
 	<properties>
 		<gwt.version>2.4.0</gwt.version>
-		<atmosphere.version>1.0.0.RC1</atmosphere.version>
+		<atmosphere.version>1.0.0</atmosphere.version>
 	</properties>
 
 	<dependencies>

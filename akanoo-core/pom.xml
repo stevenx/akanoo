@@ -14,9 +14,9 @@
 	<description>Akanoo Note Taking Core</description>
 
 	<properties>
-		<grails.version>2.1.0</grails.version>
+		<grails.version>2.2.0.RC1</grails.version>
 		<gwt.version>2.4.0</gwt.version>
-		<atmosphere.version>1.0.0.RC1</atmosphere.version>
+		<atmosphere.version>1.0.0</atmosphere.version>
 	</properties>
 
 	<dependencies>
@@ -85,7 +85,8 @@
 		<pluginManagement />
 
 		<plugins>
-			<!-- Disables the Maven surefire plugin for Grails applications, as we have our own test runner -->
+			<!-- Disables the Maven surefire plugin for Grails applications, as we 
+				have our own test runner -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -148,7 +149,7 @@
 							</filesets>
 						</configuration>
 					</execution>
-				</executions> 
+				</executions>
 			</plugin>
 			<!-- copy all sources into target/source folder -->
 			<plugin>
@@ -165,14 +166,14 @@
 							<resources>
 								<resource>
 									<!-- TODO this should be generated and not hard-coded! -->
-									<directory>${project.parent.basedir}/akanoo-frontend/target/akanoo-frontend-${project.version}/akanoo</directory>
+									<directory>../akanoo-frontend/target/akanoo-frontend-${project.version}/akanoo</directory>
 								</resource>
 							</resources>
 						</configuration>
 					</execution>
 				</executions>
 			</plugin>
-			
+
 
 			<plugin>
 				<groupId>org.grails</groupId>
@@ -183,6 +184,14 @@
 					<fork>true</fork>
 				</configuration>
 				<extensions>true</extensions>
+				<executions>
+					<execution>
+						<id>default-maven-test</id>
+						<configuration>
+							<skip>true</skip>
+						</configuration>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>

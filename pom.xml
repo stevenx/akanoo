@@ -10,8 +10,9 @@
 	<name>akanoo-parent</name>
 
 	<properties>
+		<grails.version>2.2.0.RC1</grails.version>
 		<gwt.version>2.4.0</gwt.version>
-		<atmosphere.version>1.0.0.beta5</atmosphere.version>
+		<atmosphere.version>1.0.0</atmosphere.version>
 
 		<!-- GWT needs at least java 1.6 -->
 		<maven.compiler.source>1.6</maven.compiler.source>
@@ -23,10 +24,55 @@
 	</properties>
 
 	<modules>
-		<module>akanoo-frontend</module>
 		<module>akanoo-core</module>
-		<!--<module>akanoo-backend</module>-->
+		<module>akanoo-frontend</module>
+		<module>akanoo-backend</module>
 	</modules>
 
+	<repositories>
+		<repository>
+			<!-- fix for grails not loading the commons-parent for some reason, might 
+				be a temporary server-side thing -->
+			<id>mavenCentral</id>
+			<url>http://repo1.maven.org</url>
+		</repository>
+	</repositories>
 
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>org.grails</groupId>
+										<artifactId>
+											grails-maven-plugin
+										</artifactId>
+										<versionRange>
+											[2.2.0.RC1,)
+										</versionRange>
+										<goals>
+											<goal>validate-plugin</goal>
+											<goal>init-plugin</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
 </project>
