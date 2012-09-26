@@ -28,7 +28,7 @@ interface UserServiceInterface {
 	String getCurrentUserName()
 
 	def getCurrentUser()
-	def getUser(String id)
+	def getUser(Long id)
 
 	def findUserByUsername(String username)
 	def findUserByEmail(String email)

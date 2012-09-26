@@ -66,7 +66,7 @@ class AkanooCoreGrailsPlugin {
                         'param-value'(initParam.value)
                     }
                 }
-                'load-on-startup'('0')
+                'load-on-startup'('1')
             }
         }
 
