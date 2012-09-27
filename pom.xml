@@ -5,7 +5,7 @@
 	<groupId>com.akanoo</groupId>
 	<artifactId>akanoo-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.1-SNAPSHOT</version>
+	<version>0.1.1</version>
 
 	<name>akanoo-parent</name>
 
@@ -15,8 +15,8 @@
 		<atmosphere.version>1.0.0</atmosphere.version>
 
 		<!-- GWT needs at least java 1.6 -->
-		<maven.compiler.source>1.6</maven.compiler.source>
-		<maven.compiler.target>1.6</maven.compiler.target>
+		<maven.compiler.source>1.7</maven.compiler.source>
+		<maven.compiler.target>1.7</maven.compiler.target>
 
 		<!-- Don't let your Mac use a crazy non-standard encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -26,7 +26,6 @@
 	<modules>
 		<module>akanoo-core</module>
 		<module>akanoo-frontend</module>
-		<module>akanoo-backend</module>
 	</modules>
 
 	<repositories>

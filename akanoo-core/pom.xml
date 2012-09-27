@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>akanoo-parent</artifactId>
 		<groupId>com.akanoo</groupId>
-		<version>0.1-SNAPSHOT</version>
+		<version>0.1.1</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>akanoo-core</artifactId>
@@ -16,7 +16,7 @@
 	<properties>
 		<grails.version>2.2.0.RC1</grails.version>
 		<gwt.version>2.4.0</gwt.version>
-		<atmosphere.version>1.0.0</atmosphere.version>
+		<atmosphere.version>1.0.1</atmosphere.version>
 	</properties>
 
 	<dependencies>

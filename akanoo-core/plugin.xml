@@ -18,10 +18,6 @@
     <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
   </repositories>
   <dependencies>
-    <test>
-      <dependency group='org.grails' name='grails-plugin-testing' version='2.2.0.RC1' />
-      <dependency group='org.grails' name='grails-test' version='2.2.0.RC1' />
-    </test>
     <compile>
       <dependency group='org.codehaus.gpars' name='gpars' version='0.12' />
     </compile>
@@ -35,13 +31,14 @@
       <plugin group='org.grails.plugins' name='tomcat' version='2.2.0.RC1' />
     </provided>
     <runtime>
-      <plugin group='org.grails.plugins' name='spring-security-core' version='1.2.7.3' />
-      <plugin group='org.grails.plugins' name='spring-security-acl' version='1.1.1' />
-      <plugin group='org.grails.plugins' name='resources' version='1.1.6' />
       <plugin group='com.akanoo' name='akanoo-core' version='0.1-SNAPSHOT' />
-      <plugin group='org.grails.plugins' name='database-migration' version='1.1' />
-      <plugin group='org.grails.plugins' name='hibernate' version='2.2.0.RC1' />
+      <plugin group='org.grails.plugins' name='spring-security-acl' version='1.1.1' />
       <plugin group='org.grails.plugins' name='jquery' version='1.8.0' />
+      <plugin group='org.grails.plugins' name='resources' version='1.1.6' />
+      <plugin group='org.grails.plugins' name='database-migration' version='1.1' />
+      <plugin group='org.grails.plugins' name='mail' version='1.0' />
+      <plugin group='org.grails.plugins' name='hibernate' version='2.2.0.RC1' />
+      <plugin group='org.grails.plugins' name='spring-security-core' version='1.2.7.3' />
     </runtime>
   </plugins>
   <runtimePluginRequirements />
