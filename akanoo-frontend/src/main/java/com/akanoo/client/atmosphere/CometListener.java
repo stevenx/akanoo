@@ -212,13 +212,4 @@ public class CometListener {
 		GWT.log("comet.post [" + client.getConnectionID() + "] " + payload);
 		client.post(payload);
 	}
-
-	public boolean checkConnection() {
-		if (isConnected()) {
-			return true;
-		} else {
-			initialize();
-			return false;
-		}
-	}
 }

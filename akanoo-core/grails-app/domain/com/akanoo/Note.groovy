@@ -22,6 +22,9 @@ class Note {
 	int x
 	int y
 	String body
+	String backBody
+	
+	String url
 	
 	Long version
 	Date dateCreated
@@ -32,9 +35,12 @@ class Note {
 	]
 	
     static constraints = {
+		url nullable: true
+		backBody nullable: true
     }
     
 	static mapping = {
 		body type: 'text'
+		backBody type: 'text'
 	}
 }

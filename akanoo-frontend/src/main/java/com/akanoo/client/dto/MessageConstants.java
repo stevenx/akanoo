@@ -46,6 +46,12 @@ public enum MessageConstants {
 	loadshares("loadshares"),
 
 	/**
+	 * Pushes active users of the particular board to the client
+	 * server->client
+	 */
+	loadactiveusers("loadactiveusers"),
+
+	/**
 	 * Updates the shares of the given canvas
 	 * client->server, will notify all affected users of the changes
 	 */

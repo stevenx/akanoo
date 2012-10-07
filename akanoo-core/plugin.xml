@@ -1,4 +1,4 @@
-<plugin name='akanoo-core' version='0.1-SNAPSHOT' grailsVersion='2.2.0.RC1 &gt; *'>
+<plugin name='akanoo-core' version='0.1.1' grailsVersion='2.2.0.RC1 &gt; *'>
   <author>Fabian Gebert</author>
   <authorEmail>fabian@akanoo.com</authorEmail>
   <title>Akanoo Core Plugin</title>
@@ -16,6 +16,7 @@
   <repositories>
     <repository name='grailsCentral' url='http://grails.org/plugins' />
     <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
+    <repository name='http://download.java.net/maven/2/' url='http://download.java.net/maven/2/' />
   </repositories>
   <dependencies>
     <compile>
@@ -31,14 +32,15 @@
       <plugin group='org.grails.plugins' name='tomcat' version='2.2.0.RC1' />
     </provided>
     <runtime>
-      <plugin group='com.akanoo' name='akanoo-core' version='0.1-SNAPSHOT' />
       <plugin group='org.grails.plugins' name='spring-security-acl' version='1.1.1' />
-      <plugin group='org.grails.plugins' name='jquery' version='1.8.0' />
-      <plugin group='org.grails.plugins' name='resources' version='1.1.6' />
       <plugin group='org.grails.plugins' name='database-migration' version='1.1' />
-      <plugin group='org.grails.plugins' name='mail' version='1.0' />
-      <plugin group='org.grails.plugins' name='hibernate' version='2.2.0.RC1' />
+      <plugin group='org.grails.plugins' name='facebook-sdk' version='0.3.4' />
+      <plugin group='org.grails.plugins' name='resources' version='1.1.6' />
       <plugin group='org.grails.plugins' name='spring-security-core' version='1.2.7.3' />
+      <plugin group='org.grails.plugins' name='mail' version='1.0' />
+      <plugin group='com.akanoo' name='akanoo-core' version='0.1.1' />
+      <plugin group='org.grails.plugins' name='hibernate' version='2.2.0.RC1' />
+      <plugin group='org.grails.plugins' name='jquery' version='1.8.0' />
     </runtime>
   </plugins>
   <runtimePluginRequirements />

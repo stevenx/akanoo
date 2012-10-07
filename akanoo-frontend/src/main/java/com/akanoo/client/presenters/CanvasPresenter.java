@@ -21,6 +21,9 @@ import java.util.Set;
 
 import com.akanoo.client.GoogleAnalyticsConstants;
 import com.akanoo.client.atmosphere.CometListener;
+import com.akanoo.client.atmosphere.CometService;
+import com.akanoo.client.atmosphere.InitializeEvent;
+import com.akanoo.client.atmosphere.InitializeEvent.InitializeHandler;
 import com.akanoo.client.atmosphere.RemoveNoteEvent;
 import com.akanoo.client.atmosphere.RemoveNoteEvent.RemoveNoteHandler;
 import com.akanoo.client.atmosphere.UpdateNoteEvent;
@@ -28,24 +31,24 @@ import com.akanoo.client.atmosphere.UpdateNoteEvent.UpdateNoteHandler;
 import com.akanoo.client.dto.CanvasInfo;
 import com.akanoo.client.dto.MessageConstants;
 import com.akanoo.client.dto.NoteInfo;
-import com.akanoo.client.events.CometConnectedEvent;
-import com.akanoo.client.events.ShareButtonClickedEvent;
-import com.akanoo.client.events.CometConnectedEvent.CometConnectedHandler;
+import com.akanoo.client.dto.UserInfo;
 import com.akanoo.client.events.CreateNoteEvent;
 import com.akanoo.client.events.CreateNoteEvent.CreateNoteHandler;
 import com.akanoo.client.events.FocusNoteEvent;
 import com.akanoo.client.events.FocusNoteEvent.FocusNoteHandler;
+import com.akanoo.client.events.LoadActiveUsersEvent;
+import com.akanoo.client.events.LoadActiveUsersEvent.LoadActiveUsersHandler;
 import com.akanoo.client.events.LoadCanvasEvent;
 import com.akanoo.client.events.LoadCanvasEvent.LoadCanvasHandler;
 import com.akanoo.client.events.MoveNoteEvent;
 import com.akanoo.client.events.MoveNoteEvent.MoveNoteHandler;
+import com.akanoo.client.events.ShareButtonClickedEvent;
 import com.akanoo.client.events.ShareButtonClickedEvent.ShareButtonClickedHandler;
 import com.akanoo.client.place.NameTokens;
 import com.google.gwt.core.client.GWT;
 import com.google.inject.Inject;
 import com.google.inject.Provider;
 import com.google.web.bindery.event.shared.EventBus;
-import com.google.web.bindery.event.shared.HandlerRegistration;
 import com.gwtplatform.mvp.client.HasUiHandlers;
 import com.gwtplatform.mvp.client.Presenter;
 import com.gwtplatform.mvp.client.View;
@@ -60,7 +63,8 @@ public class CanvasPresenter extends
 		Presenter<CanvasPresenter.MyView, CanvasPresenter.MyProxy> implements
 		CanvasUiHandlers, RemoveNoteHandler, UpdateNoteHandler,
 		MoveNoteHandler, CreateNoteHandler, LoadCanvasHandler,
-		CometConnectedHandler, FocusNoteHandler, ShareButtonClickedHandler {
+		LoadActiveUsersHandler, InitializeHandler, FocusNoteHandler,
+		ShareButtonClickedHandler {
 
 	public interface Point {
 
@@ -96,10 +100,12 @@ public class CanvasPresenter extends
 
 	private List<Note> notes;
 	private CometListener cometListener;
+	private CometService cometService;
 
 	@Inject
 	public CanvasPresenter(final EventBus eventBus, final MyView view,
-			final MyProxy proxy, CometListener cometListener) {
+			final MyProxy proxy, CometListener cometListener,
+			CometService cometService) {
 		super(eventBus, view, proxy);
 
 		getView().setUiHandlers(this);
@@ -107,6 +113,7 @@ public class CanvasPresenter extends
 		notes = new ArrayList<Note>();
 
 		this.cometListener = cometListener;
+		this.cometService = cometService;
 	}
 
 	@Override
@@ -114,7 +121,6 @@ public class CanvasPresenter extends
 		RevealContentEvent.fire(this, MainPresenter.CONTENT_SLOT, this);
 	}
 
-	private HandlerRegistration handler = null;
 	private CanvasInfo canvas;
 	private long canvasId;
 
@@ -123,38 +129,37 @@ public class CanvasPresenter extends
 
 	@Inject
 	private Provider<SharingPopupPresenter> sharingProvider;
-	
+
 	/**
 	 * To support URL parameters
 	 */
 	@Override
 	public void prepareFromRequest(PlaceRequest request) {
-		long canvasId = Long.parseLong(request.getParameter(NameTokens.idparam,
-				"-1"));
-
-		if (canvasId < 0) {
-			getProxy().manualRevealFailed();
-			return;
+		long requestedCanvasId;
+		try {
+			requestedCanvasId = Long.parseLong(request.getParameter(
+					NameTokens.idparam, "-1"));
+		} catch (NumberFormatException nfe) {
+			requestedCanvasId = -1;
 		}
 
-		this.canvasId = canvasId;
-
-		if (!cometListener.checkConnection()) {
-			// wait for the connection to establish
-			handler = getEventBus().addHandler(CometConnectedEvent.getType(),
-					new CometConnectedHandler() {
-
-						@Override
-						public void onCometConnected(CometConnectedEvent event) {
-							getProxy().manualReveal(CanvasPresenter.this);
-							GWT.log("Loading canvas after connect, already connected");
-							loadCanvas();
-							handler.removeHandler();
-							handler = null;
-						}
-					});
+		if (requestedCanvasId < 0) {
+			getProxy().manualRevealFailed();
+			return;
 		} else {
-			getProxy().manualReveal(this);
+			// reveal view (will also register the header presenter)
+			getProxy().manualReveal(CanvasPresenter.this);
+		}
+
+		// clear view
+		getView().setEnabled(false);
+		getView().clearNotes();
+
+		this.canvasId = requestedCanvasId;
+
+		cometListener.initialize();
+
+		if (cometService.isInitialized()) {
 			GWT.log("Loading canvas, already connected");
 			loadCanvas();
 		}
@@ -163,7 +168,7 @@ public class CanvasPresenter extends
 		if (GoogleAnalyticsConstants.ENABLE_ANALYTICS)
 			googleAnalytics.trackEvent(GoogleAnalyticsConstants.categorycanvas,
 					GoogleAnalyticsConstants.actionopen,
-					GoogleAnalyticsConstants.before, (int) canvasId);
+					GoogleAnalyticsConstants.before, (int) requestedCanvasId);
 	}
 
 	@Override
@@ -174,9 +179,10 @@ public class CanvasPresenter extends
 		addRegisteredHandler(CreateNoteEvent.getType(), this);
 		addRegisteredHandler(FocusNoteEvent.getType(), this);
 		addRegisteredHandler(LoadCanvasEvent.getType(), this);
+		addRegisteredHandler(LoadActiveUsersEvent.getType(), this);
 
-		addRegisteredHandler(CometConnectedEvent.getType(), this);
-		
+		addRegisteredHandler(InitializeEvent.getType(), this);
+
 		addRegisteredHandler(ShareButtonClickedEvent.getType(), this);
 	}
 
@@ -229,8 +235,8 @@ public class CanvasPresenter extends
 	}
 
 	@Override
-	public void onCometConnected(CometConnectedEvent event) {
-		GWT.log("Loading canvas due to connection event");
+	public void onInitialize(InitializeEvent event) {
+		GWT.log("Loading canvas due to initialize event");
 		loadCanvas(false);
 	}
 
@@ -397,6 +403,23 @@ public class CanvasPresenter extends
 					GoogleAnalyticsConstants.load, (int) canvasId);
 	}
 
+	@Override
+	public void onLoadActiveUsers(LoadActiveUsersEvent event) {
+		if (event.getCanvasInfo().id != canvasId)
+			return;
+
+		// TODO populate list of active users
+		StringBuffer activeUsersStringBuffer = new StringBuffer();
+
+		for (UserInfo user : event.getCanvasInfo().collaborators) {
+			activeUsersStringBuffer.append(user.name);
+			activeUsersStringBuffer.append(", ");
+		}
+
+		GWT.log("active users on canvas " + canvasId + ": "
+				+ activeUsersStringBuffer.toString());
+	}
+
 	private void doCreateNote(NoteInfo noteInfo) {
 		Note note = new Note();
 		note.setId(noteInfo.id);
@@ -407,7 +430,7 @@ public class CanvasPresenter extends
 		notes.add(note);
 		getView().addNote(note);
 	}
-	
+
 	@Override
 	public void onShareButtonClicked(ShareButtonClickedEvent event) {
 		SharingPopupPresenter sharingPopup = sharingProvider.get();
