@@ -16,7 +16,7 @@
 	<properties>
 		<grails.version>2.2.0.RC1</grails.version>
 		<gwt.version>2.4.0</gwt.version>
-		<atmosphere.version>1.0.1</atmosphere.version>
+		<atmosphere.version>1.0.2</atmosphere.version>
 	</properties>
 
 	<dependencies>
