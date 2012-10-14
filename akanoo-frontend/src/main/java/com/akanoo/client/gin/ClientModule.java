@@ -16,6 +16,7 @@ package com.akanoo.client.gin;
 
 import com.akanoo.client.GoogleAnalyticsConstants;
 import com.akanoo.client.atmosphere.CometListener;
+import com.akanoo.client.atmosphere.CometService;
 import com.akanoo.client.dto.AccountInfo.AccountInfoReader;
 import com.akanoo.client.dto.AccountInfo.AccountInfoWriter;
 import com.akanoo.client.dto.CanvasInfo.CanvasInfoReader;
@@ -74,6 +75,7 @@ public class ClientModule extends AbstractPresenterModule {
 		bindJsonReaders();
 
 		bind(CometListener.class).in(Singleton.class);
+		bind(CometService.class).asEagerSingleton();
 
 		bindPresenter(MainPresenter.class, MainPresenter.MyView.class,
 				MainView.class, MainPresenter.MyProxy.class);

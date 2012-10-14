@@ -44,9 +44,7 @@ public class CometService implements CometMessageHandler {
 	@Inject
 	public CometService(EventBus eventBus) {
 		this.eventBus = eventBus;
-	}
-
-	public void initialize() {
+		
 		eventBus.addHandler(CometMessageEvent.getType(), this);
 	}
 
