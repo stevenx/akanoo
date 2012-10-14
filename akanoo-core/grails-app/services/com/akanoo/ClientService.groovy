@@ -87,7 +87,7 @@ class ClientService {
 			board.save(failOnError:true, flush:true)
 
 			//fetch all collaborators
-			readingUsers = getUsers (board)
+			readingUsers = userService.getUsers (board)
 		}
 
 		//notify client about the rename
@@ -124,7 +124,7 @@ class ClientService {
 			def board = Board.get boardId
 
 			//fetch all collaborators
-			readingUsers = getUsers (board)
+			readingUsers = userService.getUsers (board)
 
 			board.delete(flush:true)
 
@@ -335,10 +335,14 @@ class ClientService {
 		Board.withNewTransaction {
 			Note note = Note.get removeNoteInfo.id
 
+			//required for mongodb support
+			note.delete()
+			
 			boardId = note.board.id
 
 			assert boardId == removeNoteInfo.canvasId
 
+			
 			def board = Board.get boardId
 			board.removeFromNotes note
 			board.save(flush:true)

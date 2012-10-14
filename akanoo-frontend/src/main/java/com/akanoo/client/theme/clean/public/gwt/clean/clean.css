@@ -8,9 +8,9 @@ pre {
 }
 body {
   color: black;
-  margin: 10px;
-  border: 0px;
-  padding: 0px;
+  margin: 0;
+  border: 0;
+  padding: 0;
   background: #fff;
   direction: ltr;
 }

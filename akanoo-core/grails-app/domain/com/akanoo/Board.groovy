@@ -18,9 +18,6 @@ import groovy.transform.EqualsAndHashCode
 
 @EqualsAndHashCode(includes="id")
 class Board {
-
-	long id
-	
 	String title
 	
 	long version

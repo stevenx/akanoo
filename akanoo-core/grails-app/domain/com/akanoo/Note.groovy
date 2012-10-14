@@ -17,8 +17,6 @@ package com.akanoo
 import java.util.Date;
 
 class Note {
-	long id
-	
 	int x
 	int y
 	String body
