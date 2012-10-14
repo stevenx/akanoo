@@ -174,7 +174,7 @@ class ClientService {
 	}
 
 	private sendInitializer(broadcaster, user) {
-		def boards = loadBoardsOfUser(userService.currentUser)
+		def boards = loadBoardsOfUser(user)
 
 		//send message back to clients
 		sendBack broadcaster,"initialize",{ account ->
@@ -459,7 +459,7 @@ class ClientService {
 		// also notify affected user (might already be in the list)
 		boardUsers << user
 
-		Board.withNewSession() {
+		Board.withNewTransaction() {
 			userService."${shareCanvasInfo.read?'add':'delete'}Permission" board, user.username, PermissionConstants.READ
 			userService."${shareCanvasInfo.write?'add':'delete'}Permission" board, user.username, PermissionConstants.WRITE
 			userService."${shareCanvasInfo.admin?'add':'delete'}Permission" board, user.username, PermissionConstants.ADMINISTRATION
