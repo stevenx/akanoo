@@ -91,6 +91,8 @@ public class CanvasPresenter extends
 		void removeNote(Note note);
 
 		void setEnabled(boolean b);
+
+		void populateActiveUsers(List<UserInfo> collaborators);
 	}
 
 	@ProxyCodeSplit
@@ -252,6 +254,7 @@ public class CanvasPresenter extends
 		if (clear) {
 			getView().setEnabled(false);
 			getView().clearNotes();
+			getView().populateActiveUsers(new ArrayList<UserInfo>());
 		}
 
 		cometListener.send(MessageConstants.loadcanvas.toString(), canvasInfo);
@@ -408,16 +411,7 @@ public class CanvasPresenter extends
 		if (event.getCanvasInfo().id != canvasId)
 			return;
 
-		// TODO populate list of active users
-		StringBuffer activeUsersStringBuffer = new StringBuffer();
-
-		for (UserInfo user : event.getCanvasInfo().collaborators) {
-			activeUsersStringBuffer.append(user.name);
-			activeUsersStringBuffer.append(", ");
-		}
-
-		GWT.log("active users on canvas " + canvasId + ": "
-				+ activeUsersStringBuffer.toString());
+		getView().populateActiveUsers(event.getCanvasInfo().collaborators);
 	}
 
 	private void doCreateNote(NoteInfo noteInfo) {

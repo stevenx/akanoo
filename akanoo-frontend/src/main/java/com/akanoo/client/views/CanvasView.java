@@ -17,6 +17,7 @@ package com.akanoo.client.views;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.akanoo.client.dto.UserInfo;
 import com.akanoo.client.messages.Languages;
 import com.akanoo.client.presenters.CanvasPresenter;
 import com.akanoo.client.presenters.CanvasUiHandlers;
@@ -167,6 +168,8 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		int pixelSensitivity();
 
 		int sizePadding();
+		
+		int activeUserPanelHeight();
 
 		String boundaryPanel();
 
@@ -189,6 +192,10 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		String bodyLabel();
 
 		String bodyBox();
+
+		String activeUserLabel();
+
+		String activeUserPanel();
 
 	}
 
@@ -236,6 +243,9 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 
 	@UiField
 	ScrollPanel scrollPanel;
+
+	@UiField
+	Panel activeUserPanel;
 
 	private static class Point implements CanvasPresenter.Point {
 		private int x;
@@ -620,5 +630,20 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 	@Override
 	public void setEnabled(boolean b) {
 		this.enabled = b;
+	}
+	
+	@Override
+	public void populateActiveUsers(List<UserInfo> collaborators) {
+		activeUserPanel.clear();
+		
+		activeUserPanel.setVisible(collaborators.size()>0);
+		
+		for(UserInfo userInfo : collaborators) {
+			Label activeUserLabel = new Label(userInfo.name);
+			activeUserLabel.setTitle(userInfo.email);
+			activeUserLabel.addStyleName(resources.canvasStyle().activeUserLabel());
+			
+			activeUserPanel.add(activeUserLabel);
+		}
 	}
 }

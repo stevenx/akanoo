@@ -8,18 +8,22 @@
 		field="resources" />
 	<ui:with type="com.akanoo.client.messages.Languages" field="messages" />
 
-	<g:ScrollPanel ui:field="scrollPanel">
-		<g:AbsolutePanel ui:field="boundaryPanel"
-			addStyleNames="{resources.canvasStyle.boundaryPanel}">
-			<g:FocusPanel ui:field="canvasFocus"
-				addStyleNames="{resources.canvasStyle.focusPanel}">
-				<g:AbsolutePanel ui:field="canvas"
-					addStyleNames="{resources.canvasStyle.canvas}">
-					<g:SimplePanel ui:field="createNotePanel"
-						addStyleNames="{resources.canvasStyle.createNotePanel}">
-					</g:SimplePanel>
-				</g:AbsolutePanel>
-			</g:FocusPanel>
-		</g:AbsolutePanel>
-	</g:ScrollPanel>
+	<g:AbsolutePanel>
+		<g:FlowPanel ui:field="activeUserPanel"
+				addStyleNames="{resources.canvasStyle.activeUserPanel}" />
+		<g:ScrollPanel ui:field="scrollPanel" width="100%" height="100%">
+			<g:AbsolutePanel ui:field="boundaryPanel"
+				addStyleNames="{resources.canvasStyle.boundaryPanel}">
+				<g:FocusPanel ui:field="canvasFocus"
+					addStyleNames="{resources.canvasStyle.focusPanel}">
+					<g:AbsolutePanel ui:field="canvas"
+						addStyleNames="{resources.canvasStyle.canvas}">
+						<g:SimplePanel ui:field="createNotePanel"
+							addStyleNames="{resources.canvasStyle.createNotePanel}">
+						</g:SimplePanel>
+					</g:AbsolutePanel>
+				</g:FocusPanel>
+			</g:AbsolutePanel>
+		</g:ScrollPanel>
+	</g:AbsolutePanel>
 </ui:UiBinder>

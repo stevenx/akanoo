@@ -135,7 +135,7 @@ class ClientService {
 		//SEND INDIVIDUAL MESSAGE BACK TO ALL USERS THAT WERE ALBE TO ACCESS THIS CANVAS
 		//notify all collaborators
 		if(readingUsers) {
-			Board.withNewSession {
+			Board.withNewTransaction {
 				def userIds = readingUsers*.id
 				userIds.each { userId ->
 					def userBroadcaster = BroadcasterFactory.default.lookup("user${userId}",true)
@@ -459,7 +459,7 @@ class ClientService {
 		// also notify affected user (might already be in the list)
 		boardUsers << user
 
-		Board.withNewTransaction() {
+		Board.withNewTransaction {
 			userService."${shareCanvasInfo.read?'add':'delete'}Permission" board, user.username, PermissionConstants.READ
 			userService."${shareCanvasInfo.write?'add':'delete'}Permission" board, user.username, PermissionConstants.WRITE
 			userService."${shareCanvasInfo.admin?'add':'delete'}Permission" board, user.username, PermissionConstants.ADMINISTRATION

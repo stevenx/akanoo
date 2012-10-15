@@ -1,6 +1,8 @@
 @def pixelSensitivity 10;
 @def sizePadding 200;
 
+@def activeUserPanelHeight 32;
+
 @sprite .boundaryPanel {
 	gwt-image: "lightbackground";
 	position: absolute;
@@ -134,4 +136,28 @@
 .boundaryPanel .dragdrop-dragging .bodyLabel {
 	outline: none !important;
 	cursor: move;
+}
+
+.activeUserPanel {
+	padding: 0 4px;
+	z-index: 1;
+	position: absolute;
+	top: 0;
+	right: 30px;
+	background: #888;
+	color: #CCC;
+	box-shadow: 0 0 8px rgba(200, 200, 200, 0.8);
+	border-style: none solid solid;
+	border-width: 1px;
+	border-radius: 0 0 2px 2px;
+	border-color: #888;
+	text-transform: uppercase;
+	font-weight: bold;
+	font-size: smaller;
+	opacity: 0.9;
+}
+
+.activeUserLabel {
+	display: inline-block;
+	padding: 6px 8px 4px;
 }
