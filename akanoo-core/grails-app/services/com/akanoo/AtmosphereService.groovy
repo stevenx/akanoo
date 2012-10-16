@@ -119,10 +119,20 @@ class AtmosphereService extends AtmosphereGwtHandler {
 	public int doComet(GwtAtmosphereResource resource) throws ServletException,
 			IOException {
 				
-		def connectionBroadcaster = BroadcasterFactory.getDefault().lookup("connection$resource.connectionID",true);
+		def connectionBroadcaster = BroadcasterFactory.default.lookup("connection$resource.connectionID",true);
 		
-		resource.getAtmosphereResource().setBroadcaster(connectionBroadcaster);
+		resource.atmosphereResource.broadcaster = connectionBroadcaster
+		
+		clientService.onConnecting resource
 		
 		DEFAULT_TIMEOUT
 	}
+			
+
+	@Override
+	public void cometTerminated(GwtAtmosphereResource cometResponse,
+			boolean serverInitiated) {
+		
+		clientService.onClose cometResponse, serverInitiated	
+	}			
 }

@@ -29,8 +29,6 @@ public class Akanoo implements EntryPoint {
 		DelayedBindRegistry.bind(ginjector);
 	
 		ginjector.getPlaceManager().revealCurrentPlace();
-		
-		ginjector.getCometService().initialize();
 	}
 	
 	

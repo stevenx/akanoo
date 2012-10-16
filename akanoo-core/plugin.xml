@@ -1,4 +1,4 @@
-<plugin name='akanoo-core' version='0.1-SNAPSHOT' grailsVersion='2.2.0.RC1 &gt; *'>
+<plugin name='akanoo-core' version='0.1.2' grailsVersion='2.2 &gt; *'>
   <author>Fabian Gebert</author>
   <authorEmail>fabian@akanoo.com</authorEmail>
   <title>Akanoo Core Plugin</title>
@@ -18,29 +18,18 @@
     <repository name='mavenCentral' url='http://repo1.maven.org/maven2/' />
   </repositories>
   <dependencies>
+    <test>
+      <dependency group='org.grails' name='grails-plugin-testing' version='2.2.0.RC1' />
+    </test>
     <compile>
+      <dependency group='org.atmosphere' name='atmosphere-runtime' version='1.0.1' />
+      <dependency group='com.google.gwt' name='gwt-servlet' version='2.4.0' />
+      <dependency group='org.atmosphere' name='atmosphere-gwt-server' version='1.0.1' />
       <dependency group='org.codehaus.gpars' name='gpars' version='0.12' />
+      <dependency group='com.akanoo' name='akanoo-frontend' version='0.1.1' />
     </compile>
   </dependencies>
-  <plugins>
-    <compile>
-      <plugin group='org.grails.plugins' name='cache' version='1.0.0' />
-    </compile>
-    <provided>
-      <plugin group='org.grails.plugins' name='tomcat' version='2.2.0.RC1' />
-      <plugin group='org.grails.plugins' name='tomcat' version='2.2.0.RC1' />
-    </provided>
-    <runtime>
-      <plugin group='com.akanoo' name='akanoo-core' version='0.1-SNAPSHOT' />
-      <plugin group='org.grails.plugins' name='spring-security-acl' version='1.1.1' />
-      <plugin group='org.grails.plugins' name='jquery' version='1.8.0' />
-      <plugin group='org.grails.plugins' name='resources' version='1.1.6' />
-      <plugin group='org.grails.plugins' name='database-migration' version='1.1' />
-      <plugin group='org.grails.plugins' name='mail' version='1.0' />
-      <plugin group='org.grails.plugins' name='hibernate' version='2.2.0.RC1' />
-      <plugin group='org.grails.plugins' name='spring-security-core' version='1.2.7.3' />
-    </runtime>
-  </plugins>
+  <plugins />
   <runtimePluginRequirements />
   <behavior />
 </plugin>

@@ -53,6 +53,7 @@ public class MessageCreator extends JsonInstanceCreator<Message> {
 		readerMap.put(MessageConstants.updatenote, noteInfoReader);
 		readerMap.put(MessageConstants.removenote, noteInfoReader);
 		readerMap.put(MessageConstants.loadshares, canvasInfoReader);
+		readerMap.put(MessageConstants.loadactiveusers, canvasInfoReader);
 		readerMap.put(MessageConstants.loadcanvas, canvasInfoReader);
 		readerMap.put(MessageConstants.createcanvas, canvasInfoReader);
 		readerMap.put(MessageConstants.renamecanvas, canvasInfoReader);

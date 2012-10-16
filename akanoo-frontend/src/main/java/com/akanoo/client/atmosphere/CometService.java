@@ -28,6 +28,7 @@ import com.akanoo.client.events.CometMessageEvent.CometMessageHandler;
 import com.akanoo.client.events.CreateCanvasEvent;
 import com.akanoo.client.events.CreateNoteEvent;
 import com.akanoo.client.events.FocusNoteEvent;
+import com.akanoo.client.events.LoadActiveUsersEvent;
 import com.akanoo.client.events.LoadCanvasEvent;
 import com.akanoo.client.events.LoadSharesEvent;
 import com.akanoo.client.events.MoveNoteEvent;
@@ -38,13 +39,12 @@ import com.google.web.bindery.event.shared.EventBus;
 public class CometService implements CometMessageHandler {
 	private EventBus eventBus;
 	private List<UserInfo> friends;
+	private boolean initialized;
 
 	@Inject
 	public CometService(EventBus eventBus) {
 		this.eventBus = eventBus;
-	}
-
-	public void initialize() {
+		
 		eventBus.addHandler(CometMessageEvent.getType(), this);
 	}
 
@@ -53,9 +53,15 @@ public class CometService implements CometMessageHandler {
 				: new ArrayList<UserInfo>();
 	}
 
+	public boolean isInitialized() {
+		return initialized;
+	}
+	
 	@Override
 	public void onCometMessage(CometMessageEvent event) {
 		if (MessageConstants.initialize.toString().equals(event.getCode())) {
+			initialized = true;
+			
 			eventBus.fireEvent(new InitializeEvent((AccountInfo) event
 					.getObject()));
 		} else if (MessageConstants.loadfriends.toString().equals(
@@ -78,6 +84,10 @@ public class CometService implements CometMessageHandler {
 		} else if (MessageConstants.loadshares.toString().equals(
 				event.getCode())) {
 			eventBus.fireEvent(new LoadSharesEvent((CanvasInfo) event
+					.getObject()));
+		} else if (MessageConstants.loadactiveusers.toString().equals(
+				event.getCode())) {
+			eventBus.fireEvent(new LoadActiveUsersEvent((CanvasInfo) event
 					.getObject()));
 		} else if (MessageConstants.createnote.toString().equals(
 				event.getCode())) {

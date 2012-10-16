@@ -14,10 +14,11 @@
  */
 package com.akanoo
 
-import java.util.List;
+import groovyx.gpars.actor.Actors;
 
 import org.atmosphere.cpr.Broadcaster
 import org.atmosphere.cpr.BroadcasterFactory
+import org.atmosphere.gwt.server.GwtAtmosphereResource;
 
 import com.akanoo.UserServiceInterface.PermissionConstants
 
@@ -29,6 +30,11 @@ class ClientService {
 	def grailsApplication
 
 	UserServiceInterface userService
+	
+	//maps connection ids to board ids
+	Map<Integer, Long> connectionBoardMap = new LinkedHashMap<Integer, Long>()
+	
+	Map<Integer, Object> connectionUserMap = new LinkedHashMap<Integer, Object>()
 
 	private void addPermission(Board board, String username, permission) {
 		userService.addPermission board, username, permission
@@ -53,7 +59,7 @@ class ClientService {
 
 		assert board.id
 
-		sendBack (cometResource.broadcaster,"createcanvas","canvasInfo") { canvas ->
+		sendBack cometResource.broadcaster, "createcanvas", { canvas ->
 			canvas.id = board.id
 			canvas.title = board.title
 		}
@@ -81,11 +87,11 @@ class ClientService {
 			board.save(failOnError:true, flush:true)
 
 			//fetch all collaborators
-			readingUsers = getUsers (board)
+			readingUsers = userService.getUsers (board)
 		}
 
 		//notify client about the rename
-		sendBack (cometResource.broadcaster,"renamecanvas","canvasInfo") { canvas ->
+		sendBack cometResource.broadcaster,"renamecanvas", { canvas ->
 			canvas.id = board.id
 			canvas.title = board.title
 		}
@@ -118,7 +124,7 @@ class ClientService {
 			def board = Board.get boardId
 
 			//fetch all collaborators
-			readingUsers = getUsers (board)
+			readingUsers = userService.getUsers (board)
 
 			board.delete(flush:true)
 
@@ -151,19 +157,27 @@ class ClientService {
 
 		//subscribe cometResource to user broadcaster
 		userBroadcaster.addAtmosphereResource cometResource.atmosphereResource
-
+		
+		//register connection
+		userRegistryActor.sendAndWait([
+				action: 'register',
+				user: userService.currentUser,
+				cometResource: cometResource
+			])
+		
 		//re-init client
 		sendInitializer cometResource.broadcaster, userService.currentUser
 
 		//send friends
 		loadfriends(null, cometResource)
+		
 	}
 
 	private sendInitializer(broadcaster, user) {
-		def boards = loadBoardsOfUser(userService.currentUser)
+		def boards = loadBoardsOfUser(user)
 
 		//send message back to clients
-		sendBack broadcaster,"initialize","accountInfo",{ account ->
+		sendBack broadcaster,"initialize",{ account ->
 			def canvases = []
 
 			boards.each { Board board ->
@@ -204,12 +218,11 @@ class ClientService {
 
 		def canvasBroadcaster = BroadcasterFactory.default.lookup("canvas$boardId",true);
 
-		//subscribe cometResource to canvas broadcaster
-		canvasBroadcaster.addAtmosphereResource cometResource.atmosphereResource
-
+		//update connection
+		updateConnectionBoard cometResource, boardId
 
 		//send message back to clients
-		sendBack (cometResource.broadcaster,"loadcanvas","canvasInfo",{ canvas ->
+		sendBack cometResource.broadcaster,"loadcanvas", { canvas ->
 			def notes = []
 
 			board.notes.each { Note boardNote ->
@@ -225,9 +238,9 @@ class ClientService {
 			canvas.notes = notes
 			canvas.id = board.id
 			canvas.title = board.title
-		})
+		}
 	}
-
+	
 	def createnote(newNoteInfo, cometResource) {
 		//confirm user has write permission
 		assert userService.hasPermission(Board.class.name, newNoteInfo.canvasId, PermissionConstants.WRITE)
@@ -249,7 +262,7 @@ class ClientService {
 		def boardId = board.id
 
 		//send message back to clients
-		sendBack "canvas${boardId}","createnote","noteInfo",{ noteInfo ->
+		sendBack "canvas${boardId}","createnote",{ noteInfo ->
 			noteInfo.id = note.id
 			noteInfo.x = note.x
 			noteInfo.y = note.y
@@ -258,7 +271,7 @@ class ClientService {
 		}
 
 		//let calling client directly edit this note
-		sendBack cometResource.broadcaster, "focusnote", "noteInfo", { noteInfo ->
+		sendBack cometResource.broadcaster, "focusnote", { noteInfo ->
 			noteInfo.id = note.id
 			noteInfo.canvasId = board.id
 		}
@@ -283,7 +296,7 @@ class ClientService {
 		}
 
 		//send message back to clients
-		sendBack "canvas${boardId}","movenote","noteInfo",{ noteInfo ->
+		sendBack "canvas${boardId}","movenote",{ noteInfo ->
 			noteInfo.id = note.id
 			noteInfo.x = note.x
 			noteInfo.y = note.y
@@ -308,7 +321,7 @@ class ClientService {
 		}
 
 		//send message back to clients
-		sendBack "canvas${boardId}","updatenote","noteInfo",{
+		sendBack "canvas${boardId}","updatenote",{
 			it.id = note.id
 			it.body = note.body
 		}
@@ -322,17 +335,21 @@ class ClientService {
 		Board.withNewTransaction {
 			Note note = Note.get removeNoteInfo.id
 
+			//required for mongodb support
+			note.delete()
+			
 			boardId = note.board.id
 
 			assert boardId == removeNoteInfo.canvasId
 
+			
 			def board = Board.get boardId
 			board.removeFromNotes note
 			board.save(flush:true)
 		}
 
 		//send message back to clients
-		sendBack "canvas${boardId}","removenote","noteInfo",{
+		sendBack "canvas${boardId}","removenote",{
 			it.id = removeNoteInfo.id
 		}
 	}
@@ -358,7 +375,7 @@ class ClientService {
 
 	private sendCollaborators(broadcaster, boardId, users) {
 		//send a direct reply!
-		sendBack broadcaster,"loadshares","canvasInfo",{ canvas ->
+		sendBack broadcaster,"loadshares",{ canvas ->
 			canvas.id = boardId
 
 			def collaborators = []
@@ -385,7 +402,7 @@ class ClientService {
 		//get all users with access to these boards
 		def friends = boards.collect { userService.getReadingUsers it }.flatten().unique()
 
-		sendBack(cometResource.broadcaster, "loadfriends", "accountInfo") { account ->
+		sendBack cometResource.broadcaster, "loadfriends", { account ->
 			def friendInfos = []
 
 			friends.each { friend ->
@@ -442,7 +459,7 @@ class ClientService {
 		// also notify affected user (might already be in the list)
 		boardUsers << user
 
-		Board.withNewSession() {
+		Board.withNewTransaction() {
 			userService."${shareCanvasInfo.read?'add':'delete'}Permission" board, user.username, PermissionConstants.READ
 			userService."${shareCanvasInfo.write?'add':'delete'}Permission" board, user.username, PermissionConstants.WRITE
 			userService."${shareCanvasInfo.admin?'add':'delete'}Permission" board, user.username, PermissionConstants.ADMINISTRATION
@@ -460,7 +477,7 @@ class ClientService {
 		//no particular reply!
 	}
 
-	void sendBack (broadcaster, code, objectType, Closure objectInitializer) {
+	void sendBack (broadcaster, code, Closure objectInitializer) {
 		if(!(broadcaster instanceof Broadcaster))
 			broadcaster = BroadcasterFactory.default.lookup(broadcaster,true);
 
@@ -477,4 +494,123 @@ class ClientService {
 
 		broadcaster.broadcast messageString
 	}
+	
+	void onConnecting(cometResource) {
+		log.info "connection opening: $cometResource.connectionID"
+	}
+	
+	void onClose(GwtAtmosphereResource cometResource, boolean serverInitiated) {
+		log.info "connection closed: $cometResource.connectionID"
+		
+		userRegistryActor.send([
+				action: 'close',
+				cometResource: cometResource
+			])
+	
+	}
+	
+	def userRegistryActor = Actors.actor {
+		loop {
+			react { args ->
+				GwtAtmosphereResource cometResource = args.cometResource
+				
+				if(args.action == "register") {
+					connectionUserMap.put cometResource.connectionID, args.user
+				}
+				else if(args.action == "close") {
+					
+					def connectionUser = connectionUserMap[cometResource.connectionID]
+					
+					if(connectionUser) {
+						try {
+						def userBroadcaster = BroadcasterFactory.default.lookup("user${connectionUser.id}",true)
+						
+						//unsubscribe cometResource from user broadcaster
+						userBroadcaster.removeAtmosphereResource cometResource.atmosphereResource
+						
+						updateConnectionBoard cometResource, null
+						}
+						catch (Exception ex){
+							log.error "Error handling connection close async", ex
+						}  
+						
+						connectionUserMap.remove cometResource.connectionID
+					}					
+				}
+				
+				replyIfExists null
+			}
+		}
+	}
+
+	/**
+	 * Update the registry info on what board the given connection/tab is.
+	 * Unsubscribe connection/tab from last canvas. Subscribe connection/tab to current canvas (boardId). 
+	 * @param cometResource Connection resource (identifies a tab)
+	 * @param boardId Current canvas, or null if connection closing
+	 */
+	private void updateConnectionBoard(GwtAtmosphereResource cometResource, boardId) {
+		int connectionId = cometResource.connectionID
+		//ignore if no change was made
+		if(connectionBoardMap[connectionId] == boardId) {
+			log.info "canvas of connection $connectionId was updated though canvas id $boardId didn't change"
+			return
+		}
+		
+		//save previous board
+		def previousBoardId = connectionBoardMap[connectionId]
+		
+		if(previousBoardId) {
+			//reset current board id
+			connectionBoardMap.remove connectionId
+			
+			def previousCanvasBroadcaster = BroadcasterFactory.default.lookup("canvas$previousBoardId",true);
+			
+			//unsubscribe cometResource from previous canvas broadcaster
+			previousCanvasBroadcaster.removeAtmosphereResource cometResource.atmosphereResource
+	
+			// update active users on subscribed connections
+			sendBoardUsers previousBoardId
+		}
+		
+		if(boardId) {
+			//set current board id
+			connectionBoardMap[connectionId] = boardId
+			
+			def newCanvasBroadcaster = BroadcasterFactory.default.lookup("canvas$boardId",true);
+			//subscribe cometResource to new canvas broadcaster
+			newCanvasBroadcaster.addAtmosphereResource cometResource.atmosphereResource
+	
+			// update active users on subscribed connections
+			sendBoardUsers boardId
+		}
+	}
+	
+	private void sendBoardUsers(boardId) {
+		def connectionIds = connectionBoardMap.findAll { it.value == boardId }.collect { it.key }
+		def users = connectionIds.collect { connectionUserMap[it] }.findAll { it != null }
+		
+		def canvasBroadcaster = BroadcasterFactory.default.lookup("canvas$boardId",true);
+		
+		sendBack canvasBroadcaster, "loadactiveusers", { canvas ->
+			canvas.id = boardId
+
+			def collaborators = []
+			users.each { user ->
+				def collaborator = [:]
+
+				collaborator.name = user.realName ?: user.email
+				collaborator.uid = user.username
+				collaborator.email = user.email
+				collaborator.thumbUrl = user.thumbUrl
+				collaborator.enabled = user.enabled
+
+				collaborators << collaborator
+			}
+
+			canvas.collaborators = collaborators
+		}
+	}
+
+
 }

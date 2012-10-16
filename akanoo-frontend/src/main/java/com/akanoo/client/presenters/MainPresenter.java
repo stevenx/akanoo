@@ -77,7 +77,7 @@ public class MainPresenter extends
 	protected void onReveal() {
 		super.onReveal();
 
-		cometListener.checkConnection();
+		cometListener.initialize();
 
 		setInSlot(HEADER_SLOT, header);
 	}
