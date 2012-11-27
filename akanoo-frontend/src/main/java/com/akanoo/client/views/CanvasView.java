@@ -109,6 +109,7 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 
 		public Note note;
 		public Label bodyLabel;
+		public Label backBodyLabel;
 		public FlowPanel notePanel;
 
 	}
@@ -168,7 +169,7 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		int pixelSensitivity();
 
 		int sizePadding();
-		
+
 		int activeUserPanelHeight();
 
 		String boundaryPanel();
@@ -337,22 +338,23 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 				super.onDrop(context);
 
 				final Widget notePanel = context.draggable;
-				
+
 				Scheduler.get().scheduleDeferred(new ScheduledCommand() {
-					
+
 					@Override
 					public void execute() {
-						Point newPosition = new Point(canvas.getWidgetLeft(notePanel),
-								canvas.getWidgetTop(notePanel));
-						
+						Point newPosition = new Point(canvas
+								.getWidgetLeft(notePanel), canvas
+								.getWidgetTop(notePanel));
+
 						if (!newPosition.equals(startPosition)) {
 							GWT.log("Now got: " + newPosition);
 							Note note = findByNotePanel(notePanel).note;
 							getUiHandlers().moveNote(note, newPosition);
 						}
-						
+
 						ignoreClick = false;
-						
+
 					}
 				});
 			}
@@ -470,6 +472,19 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		});
 		noteFlowPanel.add(bodyLabel);
 
+		// note content area
+		Label backBodyLabel = new Label(note.getBody());
+		backBodyLabel.addStyleName(resources.canvasStyle().bodyLabelPosition());
+		backBodyLabel.addStyleName(resources.canvasStyle().bodyLabel());
+		backBodyLabel.addClickHandler(new NoteClickHandler(note) {
+			@Override
+			protected void noteClicked(Note note) {
+				CanvasView.this.noteClicked(note);
+			}
+		});
+		backBodyLabel.setVisible(false);
+		noteFlowPanel.add(backBodyLabel);
+
 		// delete note button
 		final PushButton deleteNoteButton = new PushButton();
 		deleteNoteButton.setStyleName(resources.canvasStyle()
@@ -503,7 +518,8 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		NoteRepresentation representation = new NoteRepresentation();
 		representation.note = note;
 		representation.notePanel = notePanel;
-		representation.bodyLabel = bodyLabel;
+		representation.bodyLabel = backBodyLabel;
+		representation.backBodyLabel = backBodyLabel;
 		representations.add(representation);
 
 		updateCanvasSize();
@@ -631,18 +647,19 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 	public void setEnabled(boolean b) {
 		this.enabled = b;
 	}
-	
+
 	@Override
 	public void populateActiveUsers(List<UserInfo> collaborators) {
 		activeUserPanel.clear();
-		
-		activeUserPanel.setVisible(collaborators.size()>0);
-		
-		for(UserInfo userInfo : collaborators) {
+
+		activeUserPanel.setVisible(collaborators.size() > 0);
+
+		for (UserInfo userInfo : collaborators) {
 			Label activeUserLabel = new Label(userInfo.name);
 			activeUserLabel.setTitle(userInfo.email);
-			activeUserLabel.addStyleName(resources.canvasStyle().activeUserLabel());
-			
+			activeUserLabel.addStyleName(resources.canvasStyle()
+					.activeUserLabel());
+
 			activeUserPanel.add(activeUserLabel);
 		}
 	}

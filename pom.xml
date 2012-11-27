@@ -5,14 +5,14 @@
 	<groupId>com.akanoo</groupId>
 	<artifactId>akanoo-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.1.3</version>
+	<version>0.1.4</version>
 
 	<name>akanoo-parent</name>
 
 	<properties>
 		<grails.version>2.1.2</grails.version>
 		<gwt.version>2.4.0</gwt.version>
-		<atmosphere.version>1.0.2</atmosphere.version>
+		<atmosphere.version>1.0.4</atmosphere.version>
 
 		<!-- GWT needs at least java 1.6 -->
 		<maven.compiler.source>1.6</maven.compiler.source>

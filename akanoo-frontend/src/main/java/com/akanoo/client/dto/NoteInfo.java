@@ -36,4 +36,8 @@ public class NoteInfo extends Sendable {
 	public int y;
 	//body of note
 	public String body;
+	//back side body of note
+	public String backBody;
+	//url of note
+	public String url;
 }

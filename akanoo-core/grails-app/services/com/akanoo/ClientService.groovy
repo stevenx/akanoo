@@ -316,7 +316,12 @@ class ClientService {
 
 			assert boardId == updateNoteInfo.canvasId
 
-			note.body = updateNoteInfo.body
+			if(updateNoteInfo.body!=null)
+				note.body = updateNoteInfo.body
+			if(updateNoteInfo.backBody!=null)
+				note.backBody = updateNoteInfo.backBody
+			if(updateNoteInfo.url!=null)
+				note.url = updateNoteInfo.url
 			note.save(failOnError: true, flush: true)
 		}
 

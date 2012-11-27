@@ -1,4 +1,4 @@
-<plugin name='akanoo-core' version='0.1.2' grailsVersion='2.2 &gt; *'>
+<plugin name='akanoo-core' version='0.1.4' grailsVersion='2.2 &gt; *'>
   <author>Fabian Gebert</author>
   <authorEmail>fabian@akanoo.com</authorEmail>
   <title>Akanoo Core Plugin</title>
@@ -19,14 +19,14 @@
   </repositories>
   <dependencies>
     <test>
-      <dependency group='org.grails' name='grails-plugin-testing' version='2.2.0.RC1' />
+      <dependency group='org.grails' name='grails-plugin-testing' version='2.2.0.RC2' />
     </test>
     <compile>
-      <dependency group='org.atmosphere' name='atmosphere-runtime' version='1.0.1' />
-      <dependency group='com.google.gwt' name='gwt-servlet' version='2.4.0' />
-      <dependency group='org.atmosphere' name='atmosphere-gwt-server' version='1.0.1' />
       <dependency group='org.codehaus.gpars' name='gpars' version='0.12' />
-      <dependency group='com.akanoo' name='akanoo-frontend' version='0.1.1' />
+      <dependency group='com.google.gwt' name='gwt-servlet' version='2.4.0' />
+      <dependency group='org.atmosphere' name='atmosphere-runtime' version='1.0.4' />
+      <dependency group='org.atmosphere' name='atmosphere-gwt-server' version='1.0.4' />
+      <dependency group='com.akanoo' name='akanoo-frontend' version='0.1.4' />
     </compile>
   </dependencies>
   <plugins />

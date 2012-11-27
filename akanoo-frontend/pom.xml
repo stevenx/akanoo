@@ -5,15 +5,13 @@
 	<parent>
 		<artifactId>akanoo-parent</artifactId>
 		<groupId>com.akanoo</groupId>
-		<version>0.1.3</version>
+		<version>0.1.4</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>akanoo-frontend</artifactId>
 	<name>akanoo-frontend</name>
 
 	<properties>
-		<gwt.version>2.4.0</gwt.version>
-		<atmosphere.version>1.0.2</atmosphere.version>
 	</properties>
 
 	<dependencies>
