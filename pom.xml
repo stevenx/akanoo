@@ -10,13 +10,13 @@
 	<name>akanoo-parent</name>
 
 	<properties>
-		<grails.version>2.2.0.RC1</grails.version>
+		<grails.version>2.1.2</grails.version>
 		<gwt.version>2.4.0</gwt.version>
 		<atmosphere.version>1.0.2</atmosphere.version>
 
 		<!-- GWT needs at least java 1.6 -->
-		<maven.compiler.source>1.7</maven.compiler.source>
-		<maven.compiler.target>1.7</maven.compiler.target>
+		<maven.compiler.source>1.6</maven.compiler.source>
+		<maven.compiler.target>1.6</maven.compiler.target>
 
 		<!-- Don't let your Mac use a crazy non-standard encoding -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
