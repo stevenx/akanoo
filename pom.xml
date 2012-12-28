@@ -10,9 +10,9 @@
 	<name>akanoo-parent</name>
 
 	<properties>
-		<grails.version>2.1.2</grails.version>
+		<grails.version>2.2.0</grails.version>
 		<gwt.version>2.4.0</gwt.version>
-		<atmosphere.version>1.0.4</atmosphere.version>
+		<atmosphere.version>1.0.6</atmosphere.version>
 
 		<!-- GWT needs at least java 1.6 -->
 		<maven.compiler.source>1.6</maven.compiler.source>
@@ -56,7 +56,7 @@
 											grails-maven-plugin
 										</artifactId>
 										<versionRange>
-											[2.2.0.RC1,)
+											[2.2.0,)
 										</versionRange>
 										<goals>
 											<goal>validate-plugin</goal>
