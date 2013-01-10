@@ -202,9 +202,13 @@ public class CanvasPresenter extends
 	}
 
 	@Override
-	public void updateNoteBody(Note note, String text) {
+	public void updateNoteBody(Note note, String text, boolean isBackBody) {
 		NoteInfo noteInfo = new NoteInfo();
-		noteInfo.body = text;
+		if (!isBackBody)
+			noteInfo.body = text;
+		else
+			noteInfo.backBody = text;
+		
 		noteInfo.id = note.getId();
 		noteInfo.canvasId = canvas.id;
 

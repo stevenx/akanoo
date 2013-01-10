@@ -73,11 +73,13 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		private final TextBoxBase textBox;
 		private final Label bodyLabel;
 		private final Note note;
+		private boolean isBackBody;
 
-		private TextBlurHandler(TextBoxBase textBox, Label bodyLabel, Note note) {
+		private TextBlurHandler(TextBoxBase textBox, Label bodyLabel, Note note, boolean isBackBody) {
 			this.textBox = textBox;
 			this.bodyLabel = bodyLabel;
 			this.note = note;
+			this.isBackBody = isBackBody;
 		}
 
 		@Override
@@ -89,7 +91,7 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 			String text = textBox.getText();
 			if (!text.isEmpty()) {
 				bodyLabel.setVisible(true);
-				getUiHandlers().updateNoteBody(note, text);
+				getUiHandlers().updateNoteBody(note, text, isBackBody);
 
 			} else {
 				getUiHandlers().removeNote(note);
@@ -460,26 +462,26 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		Panel noteFlowPanel = new FlowPanel();
 		noteFocusPanel.add(noteFlowPanel);
 
-		// note content area
+		// note body label
 		Label bodyLabel = new Label(note.getBody());
 		bodyLabel.addStyleName(resources.canvasStyle().bodyLabelPosition());
 		bodyLabel.addStyleName(resources.canvasStyle().bodyLabel());
 		bodyLabel.addClickHandler(new NoteClickHandler(note) {
 			@Override
 			protected void noteClicked(Note note) {
-				CanvasView.this.noteClicked(note);
+				CanvasView.this.noteClicked(note, false);
 			}
 		});
 		noteFlowPanel.add(bodyLabel);
 
-		// note content area
-		Label backBodyLabel = new Label(note.getBody());
+		// note back body label
+		Label backBodyLabel = new Label(note.getBackBody());
 		backBodyLabel.addStyleName(resources.canvasStyle().bodyLabelPosition());
 		backBodyLabel.addStyleName(resources.canvasStyle().bodyLabel());
 		backBodyLabel.addClickHandler(new NoteClickHandler(note) {
 			@Override
 			protected void noteClicked(Note note) {
-				CanvasView.this.noteClicked(note);
+				CanvasView.this.noteClicked(note, true);
 			}
 		});
 		backBodyLabel.setVisible(false);
@@ -518,7 +520,7 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		NoteRepresentation representation = new NoteRepresentation();
 		representation.note = note;
 		representation.notePanel = notePanel;
-		representation.bodyLabel = backBodyLabel;
+		representation.bodyLabel = bodyLabel;
 		representation.backBodyLabel = backBodyLabel;
 		representations.add(representation);
 
@@ -564,16 +566,16 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 	}
 
 	// edit note
-	public void noteClicked(final Note note) {
+	public void noteClicked(final Note note, final boolean isBackBody) {
 		NoteRepresentation representation = findByNote(note);
 
 		final FlowPanel notePanel = representation.notePanel;
-		final Label bodyLabel = representation.bodyLabel;
+		final Label bodyLabel = isBackBody ? representation.backBodyLabel : representation.bodyLabel;
 
 		if (note != null) {
 			final TextBoxBase textBox = new TextArea();
 
-			textBox.setText(note.getBody());
+			textBox.setText(isBackBody ? note.getBackBody() : note.getBody());
 			textBox.addStyleName(resources.canvasStyle().bodyLabelPosition());
 			textBox.addStyleName(resources.canvasStyle().bodyBox());
 
@@ -583,7 +585,7 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 			editing = true;
 			GWT.log("Editing started");
 
-			textBox.addBlurHandler(new TextBlurHandler(textBox, bodyLabel, note));
+			textBox.addBlurHandler(new TextBlurHandler(textBox, bodyLabel, note, isBackBody));
 			textBox.setFocus(true);
 		}
 	}
@@ -593,7 +595,8 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		NoteRepresentation representation = findByNote(note);
 		if (representation != null) {
 			representation.bodyLabel.setText(note.getBody());
-			GWT.log("updated label to " + note.getBody());
+			representation.backBodyLabel.setText(note.getBackBody());
+			GWT.log("updated label body to " + note.getBody());
 		}
 	}
 
@@ -623,7 +626,7 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 			@Override
 			public void execute() {
 				// call click handler
-				noteClicked(note);
+				noteClicked(note, false);
 
 			}
 		});

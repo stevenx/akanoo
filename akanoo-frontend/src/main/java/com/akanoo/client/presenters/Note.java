@@ -18,6 +18,8 @@ public class Note {
 	private int x;
 	private int y;
 	private String body;
+	private String backBody;
+	private String url;
 	private long id;
 
 	public int getX() {
@@ -42,6 +44,22 @@ public class Note {
 
 	public void setBody(String body) {
 		this.body = body;
+	}
+
+	public String getBackBody() {
+		return backBody;
+	}
+
+	public void setBackBody(String backBody) {
+		this.backBody = backBody;
+	}
+
+	public String getUrl() {
+		return url;
+	}
+
+	public void setUrl(String url) {
+		this.url = url;
 	}
 
 	public long getId() {

@@ -21,7 +21,7 @@ public interface CanvasUiHandlers extends UiHandlers {
 
 	void createNote(Point position, String body);
 
-	void updateNoteBody(Note note, String text);
+	void updateNoteBody(Note note, String text, boolean isBackBody);
 
 	void moveNote(Note note, Point point);
 

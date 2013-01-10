@@ -5,8 +5,8 @@
 	<parent>
 		<artifactId>akanoo-parent</artifactId>
 		<groupId>com.akanoo</groupId>
-		<version>0.1.5</version>
 		<relativePath>..</relativePath>
+		<version>0.1.6</version>
 	</parent>
 	<artifactId>akanoo-core</artifactId>
 	<packaging>grails-plugin</packaging>
@@ -36,8 +36,7 @@
 		<dependency>
 			<groupId>com.akanoo</groupId>
 			<artifactId>akanoo-frontend</artifactId>
-			<version>0.1.5</version>
-			<scope>compile</scope>
+			<version>0.1.6</version>
 		</dependency>
 
 		<dependency>
