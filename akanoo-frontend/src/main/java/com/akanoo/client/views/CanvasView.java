@@ -43,11 +43,14 @@ import com.google.gwt.event.dom.client.TouchStartHandler;
 import com.google.gwt.event.logical.shared.AttachEvent;
 import com.google.gwt.event.logical.shared.ResizeEvent;
 import com.google.gwt.event.logical.shared.ResizeHandler;
+import com.google.gwt.regexp.shared.RegExp;
 import com.google.gwt.resources.client.ClientBundle;
 import com.google.gwt.resources.client.CssResource;
 import com.google.gwt.resources.client.ImageResource;
 import com.google.gwt.resources.client.ImageResource.ImageOptions;
 import com.google.gwt.resources.client.ImageResource.RepeatStyle;
+import com.google.gwt.safehtml.shared.SafeHtml;
+import com.google.gwt.safehtml.shared.SafeHtmlUtils;
 import com.google.gwt.uibinder.client.UiBinder;
 import com.google.gwt.uibinder.client.UiField;
 import com.google.gwt.user.client.Element;
@@ -55,6 +58,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.ui.AbsolutePanel;
 import com.google.gwt.user.client.ui.FlowPanel;
 import com.google.gwt.user.client.ui.FocusPanel;
+import com.google.gwt.user.client.ui.HTML;
 import com.google.gwt.user.client.ui.Image;
 import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.Panel;
@@ -75,7 +79,8 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		private final Note note;
 		private boolean isBackBody;
 
-		private TextBlurHandler(TextBoxBase textBox, Label bodyLabel, Note note, boolean isBackBody) {
+		private TextBlurHandler(TextBoxBase textBox, Label bodyLabel,
+				Note note, boolean isBackBody) {
 			this.textBox = textBox;
 			this.bodyLabel = bodyLabel;
 			this.note = note;
@@ -110,8 +115,8 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 	public class NoteRepresentation {
 
 		public Note note;
-		public Label bodyLabel;
-		public Label backBodyLabel;
+		public HTML bodyLabel;
+		public HTML backBodyLabel;
 		public FlowPanel notePanel;
 
 	}
@@ -463,7 +468,7 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		noteFocusPanel.add(noteFlowPanel);
 
 		// note body label
-		Label bodyLabel = new Label(note.getBody());
+		HTML bodyLabel = new HTML();
 		bodyLabel.addStyleName(resources.canvasStyle().bodyLabelPosition());
 		bodyLabel.addStyleName(resources.canvasStyle().bodyLabel());
 		bodyLabel.addClickHandler(new NoteClickHandler(note) {
@@ -475,7 +480,7 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		noteFlowPanel.add(bodyLabel);
 
 		// note back body label
-		Label backBodyLabel = new Label(note.getBackBody());
+		HTML backBodyLabel = new HTML();
 		backBodyLabel.addStyleName(resources.canvasStyle().bodyLabelPosition());
 		backBodyLabel.addStyleName(resources.canvasStyle().bodyLabel());
 		backBodyLabel.addClickHandler(new NoteClickHandler(note) {
@@ -524,6 +529,8 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		representation.backBodyLabel = backBodyLabel;
 		representations.add(representation);
 
+		updateNoteLabels(representation);
+
 		updateCanvasSize();
 	}
 
@@ -570,7 +577,8 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 		NoteRepresentation representation = findByNote(note);
 
 		final FlowPanel notePanel = representation.notePanel;
-		final Label bodyLabel = isBackBody ? representation.backBodyLabel : representation.bodyLabel;
+		final Label bodyLabel = isBackBody ? representation.backBodyLabel
+				: representation.bodyLabel;
 
 		if (note != null) {
 			final TextBoxBase textBox = new TextArea();
@@ -585,7 +593,8 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 			editing = true;
 			GWT.log("Editing started");
 
-			textBox.addBlurHandler(new TextBlurHandler(textBox, bodyLabel, note, isBackBody));
+			textBox.addBlurHandler(new TextBlurHandler(textBox, bodyLabel,
+					note, isBackBody));
 			textBox.setFocus(true);
 		}
 	}
@@ -594,10 +603,49 @@ public class CanvasView extends ViewWithUiHandlers<CanvasUiHandlers> implements
 	public void updateNoteBody(Note note) {
 		NoteRepresentation representation = findByNote(note);
 		if (representation != null) {
-			representation.bodyLabel.setText(note.getBody());
-			representation.backBodyLabel.setText(note.getBackBody());
+			updateNoteLabels(representation);
+
 			GWT.log("updated label body to " + note.getBody());
 		}
+	}
+
+	/**
+	 * Update note labels of the given representation with the body of the
+	 * corresponding note
+	 * 
+	 * @param representation
+	 */
+	private void updateNoteLabels(NoteRepresentation representation) {
+		Note note = representation.note;
+
+		// escape HTML chars
+		SafeHtml bodyHtml = SafeHtmlUtils
+				.fromString(note.getBody() != null ? note.getBody() : "");
+		SafeHtml backBodyHtml = SafeHtmlUtils
+				.fromString(note.getBackBody() != null ? note.getBackBody()
+						: "");
+
+		// replace urls with anchors
+		bodyHtml = SafeHtmlUtils
+				.fromTrustedString(replaceUrlsWithLinks(bodyHtml.asString()));
+		backBodyHtml = SafeHtmlUtils
+				.fromTrustedString(replaceUrlsWithLinks(backBodyHtml.asString()));
+
+		// update labels
+		representation.bodyLabel.setHTML(bodyHtml);
+		representation.backBodyLabel.setHTML(backBodyHtml);
+	}
+
+	/**
+	 * Replace URLs in the given string with anchors that will open in a new
+	 * window
+	 * 
+	 * @param html
+	 * @return
+	 */
+	private String replaceUrlsWithLinks(String html) {
+		RegExp r = RegExp.compile("(https?://[^ ]+)", "gim");
+		return r.replace(html, "<a href=\"$1\" target=\"_blank\">$1</a>");
 	}
 
 	@Override

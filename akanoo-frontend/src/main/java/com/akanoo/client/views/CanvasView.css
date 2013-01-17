@@ -79,6 +79,12 @@
 	text-overflow: ellipsis;
 }
 
+.bodyLabel a {
+	font-family: 'Open Sans', sans-serif;
+	font-size: 14px;
+	cursor: pointer;
+}
+
 .bodyLabel:hover {
 	outline: 1px solid #65D6EA;
 }

@@ -5,7 +5,7 @@
 	<parent>
 		<artifactId>akanoo-parent</artifactId>
 		<groupId>com.akanoo</groupId>
-		<version>0.1.6</version>
+		<version>0.1.7</version>
 		<relativePath>..</relativePath>
 	</parent>
 	<artifactId>akanoo-frontend</artifactId>
