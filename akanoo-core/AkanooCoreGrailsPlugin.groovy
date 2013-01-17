@@ -8,7 +8,7 @@ import com.akanoo.StratosphereServlet;
 
 class AkanooCoreGrailsPlugin {
     // the plugin version
-    def version = "0.1.7"
+    def version = "0.1.8"
     // the version or versions of Grails the plugin is designed for
     def grailsVersion = "2.2.0 > *"
     // the other plugins this plugin depends on
@@ -22,7 +22,7 @@ class AkanooCoreGrailsPlugin {
     def title = "Akanoo Core Plugin" // Headline display name of the plugin
     def author = "Fabian Gebert"
     def authorEmail = "fabian@akanoo.com"
-    def description = 'Collaborative note taking app'
+    def description = 'Collaborative Dashboard'
 
     // URL to the plugin's documentation
     def documentation = "http://grails.org/plugin/akanoo-core"
